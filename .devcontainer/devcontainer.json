@@ -1,0 +1,42 @@
+{
+  "name": "5 Letter Finder Development",
+  "dockerFile": "Dockerfile",
+  "context": "..",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "njpwerner.autodocstring",
+        "ms-azuretools.vscode-docker",
+        "GitHub.copilot",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "eamodio.gitlens"
+      ]
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [8000, 5432],
+
+  // Mount your local .gitconfig
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached"
+  ],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "poetry install --with dev",
+
+  // Start PostgreSQL automatically when the container starts
+  "postStartCommand": "service postgresql start || pg_ctlcluster 17 main start",
+
+  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "root"
+}
